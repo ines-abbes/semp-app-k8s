@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sp-deploy  # Nom du déploiement pour l'application Spring Boot
+  namespace: emp
+  labels:
+    app: sp-lab  # Label pour identifier l'application
+spec:
+  replicas: 1  # Nombre de réplicas pour assurer la haute disponibilité
+  selector:
+    matchLabels:
+      app: sp-lab  # Sélection des pods correspondant à ce label
+  template:
+    metadata:
+      labels:
+        app: sp-lab  # Étiquette appliquée aux pods pour le service
+    spec:
+      containers:
+      - name: spring-app-cont
+        image: inesabbes/emp_backend:v2  # Image Docker de l'application Spring Boot
+        resources:  # Allocation des ressources pour éviter la surconsommation
+          limits:
+            memory: "400Mi"  # Limite de mémoire à 400 Mo
+            cpu: "0.4"  # Limite d'utilisation du CPU à 0.4 vCPU
+          requests:
+            memory: "250Mi"  # Minimum de mémoire demandé (250 Mo)
+            cpu: "0.2"  # Minimum de CPU demandé (0.2 vCPU)
+        ports:
+        - containerPort: 8050  # Port sur lequel l'application Spring Boot écoute
+        env:
+        - name: MYSQL_USER  # Nom de l'utilisateur de la base de données
+          valueFrom:
+            secretKeyRef:
+              name: sp-secret  # Référence au Secret contenant le nom d'utilisateur
+              key: user-username
+        - name: MYSQL_PASSWORD  # Mot de passe de l'utilisateur
+          valueFrom:
+            secretKeyRef:
+              name: sp-secret
+              key: user-password
+        - name: MYSQL_HOST  
+          valueFrom: 
+            configMapKeyRef:
+              name: sp-cm  # Référence au ConfigMap contenant l'hôte MySQL
+              key:  db-host
+        - name: MYSQL_DBNAME  
+          valueFrom:
+            configMapKeyRef:
+              name: sp-cm  # Référence au ConfigMap contenant le nom de la base de données
+              key: db-name
+
