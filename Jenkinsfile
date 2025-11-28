@@ -7,13 +7,13 @@ pipeline {
 
     environment {
         // Variables pour les images Docker
-        DOCKERHUB_USER = ""
+        DOCKERHUB_USER = "inesabbes"
         backendimage = "${DOCKERHUB_USER}/emp_backend"
         frontendimage = "${DOCKERHUB_USER}/emp_frontend"     
         
         // Tags d'images
-        BACKEND_TAG = "latest"
-        FRONTEND_TAG = "latest"
+        BACKEND_TAG = "v2"
+        FRONTEND_TAG = "v2"
         
         // Dossiers sources
         backendF = "emp_backend"

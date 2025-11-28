@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: angular-app-cont
-        image: inesabbes/emp_frontend:v1  # Image Docker de l'application Angular
+        image: inesabbes/emp_frontend:v2  # Image Docker de l'application Angular
         resources:  # Allocation des ressources pour éviter une consommation excessive
           limits:
             memory: "350Mi"  # Limite de mémoire à 350 Mo
