@@ -8,21 +8,21 @@ pipeline {
     environment {
         // Variables pour les images Docker
         DOCKERHUB_USER = ""
-        backendimage = "${DOCKERHUB_USER}/"
-        frontendimage = "${DOCKERHUB_USER}/"     
+        backendimage = "${DOCKERHUB_USER}/emp_backend"
+        frontendimage = "${DOCKERHUB_USER}/emp_frontend"     
         
         // Tags d'images
-        BACKEND_TAG = ""
-        FRONTEND_TAG = ""
+        BACKEND_TAG = "latest"
+        FRONTEND_TAG = "latest"
         
         // Dossiers sources
         backendF = "emp_backend"
         frontendF = "emp_frontend"
 
-        GIT_REPO = ""
+        GIT_REPO = "https://github.com/ines-abbes/emp_app.git"
         
         // Variables pour Minikube
-        K8S_NAMESPACE = ""
+        K8S_NAMESPACE = "emp"
     }
 
     stages {
@@ -84,7 +84,7 @@ pipeline {
             steps {
                 script {
                     // Utiliser les credentials kubeconfig portable
-                    withCredentials([file(credentialsId: '', variable: 'KUBECONFIG_FILE')]) {
+                    withCredentials([file(credentialsId: 'minikube-kubeconfig', variable: 'KUBECONFIG_FILE')]) {
                       //  Déployer le backend
                         sh """
                             cp ${KUBECONFIG_FILE} ./kubeconfig
@@ -97,7 +97,7 @@ pipeline {
                             # Attendre le déploiement
                         """
                         
-                      //  Attendre 30 secondes
+                      //  Attendre 30 secondes pour que spring s'exécute
                        sleep 30
                         
                       //  Déployer le frontend
